@@ -35,6 +35,24 @@ app.post('/update-profile', function (req, res) {
   const response = res;
 
   console.log('connevting to the db')
+
+  MongoClient.connect('mongodb://admin:password@localhost:27017', function (err, client) {
+    if (err) throw err;
+
+    const db = client.db('user-account');
+    userObj['userid'] = 1
+    const query = {userid: 1};
+    const newValues = {$set: userObj};
+
+    console.log('successfully connected to the user-account db');
+
+    db.collection('users').updateOne(query, newValues, {upsert: true}, function (err, res) {
+      if (err) throw err;
+      console.log('successfully update or inserted');
+      client.close();
+      response.send(userObj);
+    })
+  })
 })
 
 app.get('/profile-picture', function (req, res) {
