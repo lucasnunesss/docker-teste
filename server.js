@@ -3,8 +3,9 @@ const path = require("path");
 const fs = require("fs");
 const MongoClient = require('mongodb').MongoClient;
 const bodyParser = require('body-parser')
+const cors = require('cors')
 const app = express();
-
+app.use(cors())
 app.use(bodyParser.urlencoded({
   extended: true
 }));
