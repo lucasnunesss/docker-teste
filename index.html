@@ -11,6 +11,20 @@
   }
 </style>
   <script>
+
+    (async function init() {
+        const response = await fetch('http://localhost:4000/get-profile');
+        console.log("response", response);
+        const user = await response.json();
+        console.log(JSON.stringify(user));
+
+        document.getElementById('name').textContent = user.name ? user.name : "Bobby";
+        document.getElementById('email').textContent = user.email ? user.email : "bobbymarcos@example.com";
+        document.getElementById('interest').textContent = user.interests ? user.interest : 'coding';
+
+        const cont = document.getElementById('container');
+        cont.style.display = 'block';
+    })
     function editProfile(){
       document.querySelector('.container').style.display = 'none'
       document.querySelector('.container-edit').style.display = 'block'
