@@ -6,14 +6,19 @@ const bodyParser = require('body-parser')
 const cors = require('cors')
 const app = express();
 app.use(cors())
+
 app.use(bodyParser.urlencoded({
   extended: true
 }));
+
+
 app.use(bodyParser.json());
 
 app.get('/', function(req, res) {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
+
+/*
 
 app.get('/get-profile', function (req, res) {
   const response = res;
@@ -30,17 +35,37 @@ app.get('/get-profile', function (req, res) {
     })
   })
 });
+*/
+const url = 'mongodb://admin:password@localhost:27017'
 
-app.post('/update-profile', function (req, res) {
+app.get("/get-profile", async (req, res) => {
+  try {
+    const client = await MongoClient.connect(url);
+    const db = client.db("user-account");
+
+    const query = {userid: 1};
+    const result = await db.collection("users").findOne(query);
+
+    client.close();
+    res.send(result);
+  } catch (err) {
+    console.log("erro", err);
+    res.status(500).send("errrrr")
+  }
+})
+app.post('/update-profile', async (req, res) => {
+  /*
   const userObj = req.body;
   const response = res;
 
   console.log('connevting to the db')
 
+  /*
   MongoClient.connect('mongodb://admin:password@localhost:27017', function (err, client) {
-    if (err) throw err;
-
+    
+    if (err) console.log("err", err);
     const db = client.db('user-account');
+    console.log(db,"aaa")
     userObj['userid'] = 1
     const query = {userid: 1};
     const newValues = {$set: userObj};
@@ -54,6 +79,23 @@ app.post('/update-profile', function (req, res) {
       response.send(userObj);
     })
   })
+    */
+   try {
+    const userObj = {...req.body, userid: 1};
+
+    const client = await MongoClient.connect(url);
+    const db = client.db('user-account')
+
+    const query = {userid: 1};
+    const newValues = {$set: userObj};
+
+    await db.collection("users").updateOne(query, newValues, {upsert: true})
+    client.close();
+    res.send(userObj)
+   } catch (error) {
+    console.error("erro", error);
+    res.status(500).send("erro db")
+   }
 })
 
 app.get('/profile-picture', function (req, res) {
@@ -64,6 +106,6 @@ app.get('/profile-picture', function (req, res) {
 
 
 
-app.listen(3000, function () {
+app.listen(4000, function () {
   console.log('app listening on port 3000!')
 })
