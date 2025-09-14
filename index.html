@@ -30,9 +30,7 @@
     h3 {
         display: inline-block;
     }
-    #container {
-        display: none;
-    }
+ 
     #container-edit {
         display: none;
     }
@@ -48,7 +46,6 @@
     }
 </style>
   <script>
-
     (async function init() {
         const response = await fetch('http://localhost:4000/get-profile');
         console.log("response", response);
