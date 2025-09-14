@@ -54,11 +54,11 @@
 
         document.getElementById('name').textContent = user.name ? user.name : "Bobby";
         document.getElementById('email').textContent = user.email ? user.email : "bobbymarcos@example.com";
-        document.getElementById('interest').textContent = user.interests ? user.interest : 'coding';
+        document.getElementById('interest').textContent = user.interests ? user.interests : 'coding';
 
         const cont = document.getElementById('container');
         cont.style.display = 'block';
-    })
+    })();
     function editProfile(){
       document.querySelector('.container').style.display = 'none'
       document.querySelector('.container-edit').style.display = 'block'
